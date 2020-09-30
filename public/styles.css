@@ -1,0 +1,29 @@
+#canvas {
+    border: 1px solid #000000;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    margin-top: 20px;
+}
+
+.grid-item-canvas {
+    justify-self: center;
+    align-self: center;
+}
+
+.grid-item-palette {
+    justify-self: center;
+    align-self: center;
+}
+
+.grid-item-chat {
+    height: 600px;
+    align-self: stretch;
+    overflow: auto;
+}
+
+.grid-item-message {
+    justify-self: start;
+}

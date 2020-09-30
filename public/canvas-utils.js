@@ -2,7 +2,7 @@
  * Asteet radiaaneiks
  * @param degrees
  */
-function degToRad(degrees) {
+const degToRad = (degrees) => {
     return Math.PI / 180 * degrees;
 }
 
@@ -13,7 +13,7 @@ function degToRad(degrees) {
  * @param {*} radius 
  * @param {*} degrees 
  */
-function drawCircle(x, y, radius, degrees) {
+const drawCircle = (x, y, radius, degrees) => {
     cx.beginPath();
     cx.arc(x, y, radius, 0, degToRad(degrees), false);
     cx.fill();

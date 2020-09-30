@@ -1,6 +1,6 @@
 const socketio = require('socket.io');
 const express = require('express');
-const { getTime } = require('./server-utils');
+const { getTime, randomName } = require('./server-utils');
 
 const app = express();
 
@@ -9,7 +9,7 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
 app.get('/', (request, response) => {
-    response.render('index');
+    response.render('index', { title: 'LemonHuone'});
 });
 
 const port = process.env.PORT || 3000;
@@ -20,10 +20,12 @@ const server = app.listen(port, () => {
 
 const io = socketio(server);
 
-io.on('connection', (socket) => {
+io.on('connection', socket => {
     console.log(`[${getTime()}]: User ${socket.id} connected.`);
 
-    socket.on('send_drawing', (data) => {
+    socket.username = randomName();
+
+    socket.on('send_drawing', data => {
         socket.broadcast.emit('receive_drawing', {
             x1: data.x1,
             y1: data.y1,
@@ -31,6 +33,14 @@ io.on('connection', (socket) => {
             y2: data.y2,
             color: data.color
         });
+    });
+
+    socket.on('change_username', data => {
+        socket.username = data.username;
+    });
+
+    socket.on('new_message', data => {
+        io.sockets.emit('receive_message', { username: socket.username, message: data.message });
     });
 
     socket.on('disconnect', () => {
