@@ -1,5 +1,5 @@
 /**
- * Converts degrees to radians
+ * Asteet radiaaneiks
  * @param degrees
  */
 function degToRad(degrees) {
@@ -7,7 +7,7 @@ function degToRad(degrees) {
 }
 
 /**
- * Draws a circle
+ * ympyrä
  * @param {*} x 
  * @param {*} y 
  * @param {*} radius 

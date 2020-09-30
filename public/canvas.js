@@ -5,35 +5,74 @@ const cx = canvas.getContext('2d');
 const palette = document.querySelector('#palette');
 const px = palette.getContext('2d');
 
-const colors = ['#00000', '#ff0000', '#00ff00', '#0000ff', '#00ffff', '#aa77dd'];
+const colors = ['#000000', '#ff0000', '#00ff00', '#0000ff', '#fff200', '#00ffff', '#aa77dd', '#ffc908', '#d43644', '#7db43e'];
 
-let palIndex = 0;
-let palX = 10;
-let palY = 10;
-let palSize = 40;
+const PAL_START_X = 10;
+const PAL_START_Y = 10;
+const PAL_SIZE = 40;
+
 let palCoords = [];
+let palIndex = 0;
+let oldX, oldY;
+let mouseDown = false;
 
-for (let i = 0; i < colors.length; i++) {
-    px.fillStyle = colors[i];
-    px.fillRect(palX, palY, palSize, palSize);
+const drawPalette = () => {
+    let palX = PAL_START_X;
+    let palY = PAL_START_Y;
+    palCoords = [];
 
-    palCoords.push({
-        x1: palX,
-        y1: palY,
-        x2: palX + palSize,
-        y2: palY + palSize
-    });
-
-    palX += 50;
+    for (let i = 0; i < colors.length; i++) {
+        px.fillStyle = colors[i];
+        px.fillRect(palX, palY, PAL_SIZE, PAL_SIZE);
+    
+        palCoords.push({
+            x1: palX,
+            y1: palY,
+            x2: palX + PAL_SIZE,
+            y2: palY + PAL_SIZE
+        });
+    
+        palX += 50;
+    }
 }
 
-console.table(palCoords);
+const drawMarker = (coords) => {
+    let x1 = coords.x2 - 10;
+    let y1 = coords.y1;
+
+    let x2 = coords.x2;
+    let y2 = coords.y1 + 10;
+
+    let x3 = coords.x2;
+    let y3 = coords.y1;
+
+    let x4 = coords.x2 - 10;
+    let y4 = coords.y1 + 10;
+
+    px.strokeStyle = '#ffffff';
+    px.lineWidth = 2;
+    cx.lineCap = 'round';
+    px.beginPath();
+    px.moveTo(x1, y1);
+    px.lineTo(x2, y2);
+    px.moveTo(x3, y3);
+    px.lineTo(x4, y4);
+    px.stroke();
+
+    let tmp = x1;
+    x1 = x2;
+    x2 = tmp;
+    
+}
+
+drawPalette();
 
 palette.addEventListener('click', e => {
     palCoords.forEach((coords, index) => {
         if (e.offsetX >= coords.x1 && e.offsetX <= coords.x2 && e.offsetY >= coords.y1 && e.offsetY <= coords.y2) {
-            console.log(index);
             palIndex = index;
+            drawPalette();
+            drawMarker(coords);
         }
     })
 });
@@ -41,9 +80,6 @@ palette.addEventListener('click', e => {
 canvas.addEventListener('contextmenu', event => {
     event.preventDefault();
 });
-
-let mouseDown = false;
-let oldX, oldY;
 
 canvas.addEventListener('mousedown', e => {
     mouseDown = true;
@@ -69,7 +105,8 @@ canvas.addEventListener('mousemove', e => {
             x1: oldX,
             y1: oldY,
             x2: e.offsetX,
-            y2: e.offsetY
+            y2: e.offsetY,
+            color: colors[palIndex]
         });
 
         oldX = e.offsetX;
@@ -80,6 +117,7 @@ canvas.addEventListener('mousemove', e => {
 socket.on('receive_drawing', (data) => {
     cx.lineWidth = 5;
     cx.lineCap = 'round';
+    cx.strokeStyle = data.color;
     cx.beginPath();
     cx.moveTo(data.x1, data.y1);
     cx.lineTo(data.x2, data.y2);
