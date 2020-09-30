@@ -37,6 +37,7 @@ io.on('connection', socket => {
 
     socket.on('change_username', data => {
         socket.username = data.username;
+        io.sockets.emit('receive_message', { username: socket.username, message: 'liittyi keskusteluun' });
     });
 
     socket.on('new_message', data => {
