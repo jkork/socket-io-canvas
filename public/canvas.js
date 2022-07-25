@@ -85,7 +85,7 @@ palette.addEventListener('click', e => {
 });
 
 canvas.addEventListener('contextmenu', e => {
-    event.preventDefault();
+    e.preventDefault();
 });
 
 canvas.addEventListener('mousedown', e => {

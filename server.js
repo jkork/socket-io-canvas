@@ -9,7 +9,7 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
 app.get('/', (request, response) => {
-    response.render('index', { title: 'LemonHuone'});
+    response.render('index', { title: 'Spurdo Chat'});
 });
 
 const port = process.env.PORT || 3000;
